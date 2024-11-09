@@ -46,10 +46,10 @@ function startGame() {
     });
     $("#quessPokemonInput").focus(function () {
         hideorshow(this, "focus");
+        filterFunction(this);
     });
     $("#quessPokemonInput").focusout(function () {
         hideorshow(this, "focusout");
-        filterFunction(this);
     });
 
     $("#pokemonDropdown").find("div").click(function (event) {
@@ -61,7 +61,7 @@ function startGame() {
             .promise().done(function () {
                 document.getElementById("loading").remove();
             });
-    }, 500);
+    }, 1500);
 
     function guessPokemon() {
         let format = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
@@ -80,17 +80,28 @@ function startGame() {
                             notification("", response.error, true)
                         }
                         else {
-                            let tr = document.createElement("tr");
-                            let tdimage = document.createElement("td");
-                            tdimage.innerText = '<img src="">';
-                            $(tr).append(tdimage);
-                            response.forEach(difference => {
-                                console.log(difference);
+                            let tr = document.createElement("tr");        
+                            for (let i = 0; i < response.length; i++) {
                                 let td = document.createElement("td");
-                                td.innerText = difference;
+                                if(i == 0) {
+                                    td.innerHTML = `<img src="${response[i].sprite}">`;
+                                }
+                                else {
+                                    td.innerText = capitalizeFirstLetter(response[i][Object.keys(response[i])[0]]);
+                                    if(response[i][Object.keys(response[i])[1]]) {
+                                        td.classList.add("correct");
+                                    }
+                                    else {
+                                        td.classList.add("incorrect");
+                                    }
+                                }
                                 $(tr).append(td);
-                            });
+                            }
                             $('#guessedPokemon>tbody').append(tr);
+
+                            if(response[1].value) {
+                                console.log("WIN");
+                            }
                         }
                     }
                     else {
@@ -134,6 +145,10 @@ function startGame() {
             }, 100);
         }
     }
+}
+
+function capitalizeFirstLetter(val) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
 
 function generateRandomString(length = 10) {

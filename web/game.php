@@ -55,11 +55,18 @@ if (isset($_POST['initGame'])) {
     $quessed_pokemon = [];
 
     if ($stmt = $mysqli->prepare('SELECT pokemon FROM games WHERE gameid = ?')) {
-
         $stmt->bind_param('s', $gameid);
         $stmt->execute();
         $stmt->bind_result($random_pokemon);
         $stmt->fetch();
+        $stmt->close();
+    } else {
+        ReturnJson("error", "Could not prepare statement!", $stmt);
+    }
+
+    if ($stmt = $mysqli->prepare('UPDATE games SET guesses = guesses + 1 WHERE gameid = ?')) {
+        $stmt->bind_param('s', $gameid);
+        $stmt->execute();
         $stmt->close();
     } else {
         ReturnJson("error", "Could not prepare statement!", $stmt);
@@ -94,16 +101,16 @@ if (isset($_POST['initGame'])) {
     $quessed_pokemon->types = json_decode($quessed_pokemon->types);
     $random_pokemon->types = json_decode($random_pokemon->types);
 
-    $difference = [];
-
-    array_push($difference, array("sprite" => $quessed_pokemon->sprite));
-    array_push($difference, array("name" => $quessed_pokemon->name == $random_pokemon->name));
-    array_push($difference, array("generation" => $quessed_pokemon->generation == $random_pokemon->generation));
-    array_push($difference, array("type1" => $quessed_pokemon->types[0] ?? null == $random_pokemon->types[0] ?? null));
-    array_push($difference, array("type2" => $quessed_pokemon->types[1] ?? null == $random_pokemon->types[1] ?? null));
-    array_push($difference, array("color" => $quessed_pokemon->color == $random_pokemon->color));
-    array_push($difference, array("habitat" => $quessed_pokemon->habitat == $random_pokemon->habitat));
-    array_push($difference, array("shape" => $quessed_pokemon->shape == $random_pokemon->shape));
+    $difference = [
+        array("sprite" => $quessed_pokemon->sprite),
+        array("name" => $quessed_pokemon->name, "value" => $quessed_pokemon->name == $random_pokemon->name),
+        array("generation" => $quessed_pokemon->generation, "value" => $quessed_pokemon->generation == $random_pokemon->generation),
+        array("type1" => $quessed_pokemon->types[0] ?? "undefined", "value" => ($quessed_pokemon->types[0] ?? "undefined") == ($random_pokemon->types[0] ?? "undefined")),
+        array("type2" => $quessed_pokemon->types[1] ?? "undefined", "value" => ($quessed_pokemon->types[1] ?? "undefined") == ($random_pokemon->types[1] ?? "undefined")),
+        array("color" => $quessed_pokemon->color, "value" => $quessed_pokemon->color == $random_pokemon->color),
+        array("habitat" => $quessed_pokemon->habitat, "value" => $quessed_pokemon->habitat == $random_pokemon->habitat),
+        array("shape" => $quessed_pokemon->shape, "value" => $quessed_pokemon->shape == $random_pokemon->shape),
+    ];
 
     echo json_encode($difference);
     exit;
@@ -143,21 +150,26 @@ function GetPokemons()
             <div>
                 <input type="text" id="quessPokemonInput">
                 <button id="quessPokemon">?</button>
-            </div>
-            <div id="pokemonDropdown" class="dropdown-content">
-                <?php GetPokemons(); ?>
+                <div id="pokemonDropdown" class="dropdown-content">
+                    <?php GetPokemons(); ?>
+                </div>
             </div>
             <table id="guessedPokemon">
-                <tr>
-                    <td>Image</td>
-                    <td>Name</td>
-                    <td>Generation</td>
-                    <td>Type 1</td>
-                    <td>Type 2</td>
-                    <td>Color</td>
-                    <td>Habitat</td>
-                    <td>Shape</td>
-                </tr>
+                <thead>
+                    <tr>
+                        <td>Image</td>
+                        <td>Name</td>
+                        <td>Generation</td>
+                        <td>Type 1</td>
+                        <td>Type 2</td>
+                        <td>Color</td>
+                        <td>Habitat</td>
+                        <td>Shape</td>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
             </table>
         </div>
     </div>

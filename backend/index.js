@@ -1,5 +1,7 @@
 import dotenv from 'dotenv'
 import mysql from 'mysql';
+import fs from 'fs';
+import https from 'https';
 
 dotenv.config()
 
@@ -16,7 +18,7 @@ setInterval(() => {
     GetPokemons();
 }, 24 * 60 * 1000 * 60);
 
-function GetPokemons() {
+function GetPokemons(downloadSprites = true) {
     con.connect(function (err) {
         if (err) throw err;
     });
@@ -32,8 +34,33 @@ function GetPokemons() {
                         if (p.is_default == true) {
                             pokemon.pokedex = p.id;
                             pokemon.name = p.name;
-                            pokemon.name = pokemon.name.replace(/\-.*/,'')
-                            pokemon.sprite = p.sprites.front_default;
+                            pokemon.name = pokemon.name.replace(/\-.*/, '')
+                            if (downloadSprites) {
+                                if (!fs.existsSync("./sprites")) {
+                                    fs.mkdirSync("./sprites");
+                                }
+                                let path = `./sprites/${pokemon.name}.png`;
+                                if (!fs.existsSync(path)) {
+                                    const file = fs.createWriteStream(path);
+                                    https.get(p.sprites.front_default, (response) => {
+                                        if (response.statusCode === 200) {
+                                            response.pipe(file);
+                                            file.on('finish', () => {
+                                                file.close();
+                                            });
+                                        } else {
+                                            console.log('Failed to download image. Status:', response.statusCode);
+                                        }
+                                    }).on('error', (err) => {
+                                        fs.unlink(path, () => { });
+                                        console.error('Error:', err.message);
+                                    });
+                                }
+                                pokemon.sprite = path.replace(".", "");
+                            }
+                            else {
+                                pokemon.sprite = p.sprites.front_default;
+                            }
                             pokemon.types = [];
                             p.types.forEach(type => {
                                 pokemon.types.push(type.type.name);
@@ -43,10 +70,10 @@ function GetPokemons() {
                                 .then((s) => {
                                     pokemon.generation = s.generation.name.replace("generation-", "").toUpperCase();
                                     pokemon.color = s.color.name;
-                                    if(s.habitat != null) {
+                                    if (s.habitat != null) {
                                         pokemon.habitat = s.habitat.name;
                                     }
-                                    if(s.shape != null) {
+                                    if (s.shape != null) {
                                         pokemon.shape = s.shape.name;
                                     }
                                     var sql = `INSERT INTO pokemons (pokedex, name, generation, sprite, types, color, habitat, shape) VALUES ("${pokemon.pokedex}","${pokemon.name}","${pokemon.generation}","${pokemon.sprite}",'${JSON.stringify(pokemon.types)}',"${pokemon.color}","${pokemon.habitat}","${pokemon.shape}") ON DUPLICATE KEY UPDATE pokedex = "${pokemon.pokedex}", name = "${pokemon.name}"`;

@@ -189,6 +189,52 @@ body {
     align-items: center;
 }
 
+.container .game table {
+    text-align: center;
+}
+
+.container .game table tbody {
+    display: block;
+    overflow-y: scroll;
+    height: 400px;
+}
+
+.container .game table tr {
+    display: table;
+    table-layout: fixed;
+}
+
+.container .game table td {
+    width: 100px;
+    height: 100px;
+    padding: 0;
+    border-radius: 4px;
+}
+
+.container .game table tbody td:first-child {
+    background-color: #292929;
+}
+
+.correct {
+    background-color: #4ca55b;
+}
+
+.correct:hover {
+    background-color: #296132;
+}
+
+.incorrect {
+    background-color: #cc0000;
+}
+
+.incorrect:hover {
+    background-color: #530d0d;
+}
+
+.container .game table td img {
+    height: 100%;
+}
+
 .container nav a {
     background-color: #292929;
     border: 0;
