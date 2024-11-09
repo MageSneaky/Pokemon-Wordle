@@ -1,0 +1,11 @@
+{
+  "name": "pokemongame-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "MageSneaky",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "mysql": "^2.18.1"
+  }
+}
