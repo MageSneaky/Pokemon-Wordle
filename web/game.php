@@ -9,7 +9,7 @@ if (isset($_POST['startGame'])) {
         exit('Failed to connect to MySQL: ' . mysqli_connect_error());
     }
 
-    if ($stmt = $mysqli->prepare('SELECT * FROM pokemons')) {
+    if ($stmt = $mysqli->prepare('SELECT * FROM pokemons ORDER BY pokedex ASC')) {
         $stmt->execute();
         $p = $stmt->get_result();
         $stmt->close();
@@ -23,10 +23,10 @@ if (isset($_POST['startGame'])) {
                 "habitat" => $row['habitat'],
                 "shape" => $row['shape']
             );
+            $pokemon = json_encode($pokemon);
             array_push($pokemons, $pokemon);
         }
     }
-
     $random_pokemon = $pokemons[array_rand($pokemons)];
 
     mysqli_close($mysqli);
@@ -36,8 +36,8 @@ function GetPokemons() {
     global $pokemons;
 
     foreach ($pokemons as $i => $pokemon) {
-        echo $pokemon->sprite;
-        //echo '<div><img src="' . $pokemon->sprite . '"><a data-name="' . $pokemon->name . '">' . $pokemon->name . '</a></div>';
+        $pokemon = json_decode($pokemon);
+        echo '<div><img src="' . $pokemon->sprite . '"><a data-name="' . $pokemon->name . '">' . ucfirst($pokemon->name) . '</a></div>';
     }
 }
 
@@ -52,11 +52,12 @@ function GetPokemons() {
         <h1>Guess the Pokemon</h1>
         <div>
             <input type="text" id="quessPokemonInput">
-            <div id="pokemonsDropdown" class="dropdown-content">
+            <button id="quessPokemon">?</button>
+            <div id="pokemonDropdown" class="dropdown-content">
                 <?php GetPokemons(); ?>
             </div>
-            <button id="quessPokemon">?</button>
         </div>
     </div>
 </div>
 <?php include 'notifications.php'; ?>
+<?php include 'loading.php'; ?>

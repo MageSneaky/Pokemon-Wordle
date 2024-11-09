@@ -176,6 +176,58 @@ body {
     align-items: center;
 }
 
+.container .game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container nav a {
+    background-color: #292929;
+    border: 0;
+    padding: 8px 15px;
+    border-radius: 10px;
+    transition: all 0.2s ease 0s;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.container nav a:hover {
+    background-color: #363636;
+}
+
+.container .game .dropdown-content {
+    display: none;
+    background-color: #181A1B;
+    min-width: 230px;
+    max-height: 340px;
+    overflow-y: scroll;
+    border: 1px solid #818181;
+    z-index: 100;
+    position: absolute;
+}
+
+.container .game .dropdown-content div {
+    display: flex;
+    align-items: center;
+    color: white;
+    background-color: #1b1c1d;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.container .game .dropdown-content div:hover {
+    background-color: #19191a;
+}
+
+.container .game .dropdown-content div img {
+    height: 56px;
+}
+
+.show {
+    display: block !important;
+}
+
 .notifications {
     position: fixed;
     right: 0;
