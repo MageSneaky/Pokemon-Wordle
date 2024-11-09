@@ -32,6 +32,7 @@ function GetPokemons() {
                         if (p.is_default == true) {
                             pokemon.pokedex = p.id;
                             pokemon.name = p.name;
+                            pokemon.name = pokemon.name.replace(/\-.*/,'')
                             pokemon.sprite = p.sprites.front_default;
                             pokemon.types = [];
                             p.types.forEach(type => {
@@ -48,7 +49,7 @@ function GetPokemons() {
                                     if(s.shape != null) {
                                         pokemon.shape = s.shape.name;
                                     }
-                                    var sql = `INSERT INTO pokemons (name, generation, sprite, types, color, habitat, shape) VALUES ("${pokemon.name}","${pokemon.generation}","${pokemon.sprite}",'${JSON.stringify(pokemon.types)}',"${pokemon.color}","${pokemon.habitat}","${pokemon.shape}") ON DUPLICATE KEY UPDATE pokedex = "${pokemon.pokedex}", name = "${pokemon.name}"`;
+                                    var sql = `INSERT INTO pokemons (pokedex, name, generation, sprite, types, color, habitat, shape) VALUES ("${pokemon.pokedex}","${pokemon.name}","${pokemon.generation}","${pokemon.sprite}",'${JSON.stringify(pokemon.types)}',"${pokemon.color}","${pokemon.habitat}","${pokemon.shape}") ON DUPLICATE KEY UPDATE pokedex = "${pokemon.pokedex}", name = "${pokemon.name}"`;
                                     con.query(sql, function (err, result) {
                                         if (err) throw err;
 

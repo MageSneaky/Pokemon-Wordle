@@ -32,6 +32,7 @@ $url = "https://pokemon.sneaky.pink";
     <script src="/scripts/jquery.min.js"></script>
     <script src="/scripts/notifications.js"></script>
     <script src="/scripts/main.js"></script>
+    <script src="/scripts/game.js"></script>
 </head>
 
 <body onload="init()">
@@ -42,7 +43,7 @@ $url = "https://pokemon.sneaky.pink";
                 <div class="checkBox">
                     <label for="hintsCheckBox" title="Allow hints? (score to submitted to leaderboard)">Allow hints?</label>
                     <div class="checkbox">
-                        <input type="checkbox" id="hintsCheckBox" name="hintsCheckBox" value="0"
+                        <input type="checkbox" id="hintsCheckBox" name="hints" value="0"
                             title="Allow hints? (score to submitted to leaderboard)">
                     </div>
                 </div>

@@ -26,6 +26,7 @@ span,
 label,
 input,
 li,
+td,
 button {
     font-family: "Montserrat";
     color: #ffffff;
@@ -177,6 +178,12 @@ body {
 }
 
 .container .game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container .game > div {
     display: flex;
     flex-direction: column;
     align-items: center;
