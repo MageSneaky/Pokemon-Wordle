@@ -30,7 +30,7 @@ function init() {
             },
             success: function (response) {
                 if (response != null) {
-                    document.body.innerHTML = response;
+                    $(document.body).html(response);
                 }
                 else {
                     notification("", response.error, true)

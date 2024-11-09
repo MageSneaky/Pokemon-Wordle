@@ -51,6 +51,7 @@ $url = "https://pokemon.sneaky.pink";
             </form>
         </div>
     </div>
+    <?php include 'notifications.php'; ?>
     <?php include 'loading.php'; ?>
 </body>
 

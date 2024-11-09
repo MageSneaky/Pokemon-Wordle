@@ -21,7 +21,7 @@ function GetPokemons() {
         if (err) throw err;
     });
 
-    fetch("https://pokeapi.co/api/v2/pokemon?limit=10&offset=0")
+    fetch("https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0")
         .then(res => res.json())
         .then((list) => {
             for (let i in list.results) {
@@ -47,7 +47,7 @@ function GetPokemons() {
                                     if(s.shape != null) {
                                         pokemon.shape = s.shape.name;
                                     }
-                                    var sql = `REPLACE INTO pokemons (name, generation, sprite, types, color, habitat, shape) VALUES ("${pokemon.name}","${pokemon.generation}","${pokemon.sprite}",'${JSON.stringify(pokemon.types)}',"${pokemon.color}","${pokemon.habitat}","${pokemon.shape}")`;
+                                    var sql = `INSERT INTO pokemons (name, generation, sprite, types, color, habitat, shape) VALUES ("${pokemon.name}","${pokemon.generation}","${pokemon.sprite}",'${JSON.stringify(pokemon.types)}',"${pokemon.color}","${pokemon.habitat}","${pokemon.shape}") ON DUPLICATE KEY UPDATE name = "${pokemon.name}"`;
                                     con.query(sql, function (err, result) {
                                         if (err) throw err;
 
@@ -60,8 +60,6 @@ function GetPokemons() {
 
                                         console.log(`[${month}/${date} ${hours}:${minutes}:${seconds}] Added ${pokemon.name}`);
                                     });
-
-                                    //console.log(pokemon);
                                 });
                         }
                     });
