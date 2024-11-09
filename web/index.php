@@ -40,11 +40,11 @@ $url = "https://pokemon.sneaky.pink";
         <div class="settings">
             <h1 class="title">Pokemon Game</h1>
             <form id="pokemonGame">
-                <div class="checkBox">
-                    <label for="hintsCheckBox" title="Allow hints? (score to submitted to leaderboard)">Allow hints?</label>
-                    <div class="checkbox">
-                        <input type="checkbox" id="hintsCheckBox" name="hints" value="0"
-                            title="Allow hints? (score to submitted to leaderboard)">
+                <div class="check-Box">
+                    <label for="hintsCheckBox" title="Allow hints? (score to submitted to leaderboard)">Allow
+                        hints?</label>
+                    <div class="check-Box">
+                        <input type="checkbox" id="hintsCheckBox" <?php echo $_COOKIE['hints'] == 1 ? 'checked=""' : '' ?> name="hints" value="0" title="Allow hints? (score to submitted to leaderboard)">
                     </div>
                 </div>
                 <input type="submit" id="startButton" value="Start Game" name="startGame">

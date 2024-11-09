@@ -52,11 +52,11 @@ a {
     cursor: pointer;
 }
 
-.checkbox {
+.check-Box {
     display: flex;
 }
 
-.checkbox>input[type="checkbox"] {
+.check-Box>input[type="checkbox"] {
     appearance: none;
     background-color: #333333;
     border-radius: 72px;
@@ -68,12 +68,12 @@ a {
     width: 40px;
 }
 
-.checkbox>input[type="checkbox"],
-.checkbox>input[type="checkbox"]::after {
+.check-Box>input[type="checkbox"],
+.check-Box>input[type="checkbox"]::after {
     transition: all 100ms ease-out;
 }
 
-.checkbox>input[type="checkbox"]::after {
+.check-Box>input[type="checkbox"]::after {
     background-color: #fff;
     border-radius: 50%;
     content: "";
@@ -84,25 +84,25 @@ a {
     width: 19px;
 }
 
-.checkbox>input[type="checkbox"]:hover {
+.check-Box>input[type="checkbox"]:hover {
     background-color: #3D3D3D;
     transition-duration: 0s;
 }
 
-.checkbox>input[type="checkbox"]:checked {
+.check-Box>input[type="checkbox"]:checked {
     background-color: #48c2b2;
 }
 
-.checkbox>input[type="checkbox"]:checked::after {
+.check-Box>input[type="checkbox"]:checked::after {
     background-color: #fff;
     left: 17px;
 }
 
-.checkbox :focus:not(.focus-visible) {
+.check-Box :focus:not(.focus-visible) {
     outline: 0;
 }
 
-.checkbox>input[type="checkbox"]:checked:hover {
+.check-Box>input[type="checkbox"]:checked:hover {
     background-color: #4c9289;
 }
 
@@ -119,6 +119,11 @@ button:hover {
     background-color: #363636;
 }
 
+input[type="submit"]:disabled,
+button:disabled {
+    cursor: not-allowed;
+}
+
 input[type="text"],
 input[type="password"] {
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -130,16 +135,6 @@ input[type="password"] {
 input[type="text"]:focus,
 input[type="password"]:focus {
     border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.checkBox {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.checkBox>label {
-    margin-right: 10px;
 }
 
 html,
@@ -183,10 +178,15 @@ body {
     align-items: center;
 }
 
-.container .game > div {
+.container .game>div {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.container .game>div button {
+    font-size: 16px;
+    padding: 6px 12px;
 }
 
 .container .game table {
@@ -279,6 +279,54 @@ body {
 
 .show {
     display: block !important;
+}
+
+.win-overlay {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.win-overlay .popup-box {
+    max-width: 400px;
+    width: 80%;
+    background: #1f1f1f;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.win-overlay .popup-box img {
+    width: 100px;
+}
+
+.win-overlay .popup-box nav a {
+    background-color: #292929;
+    border: 0;
+    padding: 8px 15px;
+    border-radius: 10px;
+    transition: all 0.2s ease 0s;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.win-overlay .popup-box .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 8px 12px;
 }
 
 .notifications {

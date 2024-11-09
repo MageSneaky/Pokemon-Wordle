@@ -1,19 +1,22 @@
-const gameid = generateRandomString();
+let gameid = "";
 function initGame() {
+    gameid = generateRandomString();
     const startGameForm = document.querySelector("#pokemonGame");
     startGameForm.onsubmit = (event) => {
         event.preventDefault();
-        var formData = new FormData(startGameForm);
+        let formData = new FormData(startGameForm);
+        let hints = formData.get('hints');
+        document.cookie = `hints=${hints || 0}`; 
         $.ajax({
             url: "/game",
             type: 'post',
             data: {
                 'initGame': gameid,
-                'hints': formData.get('hints'),
+                'hints': hints,
             },
             success: function (response) {
                 if (response != null) {
-                    if(response.error != null) {
+                    if (response.error != null) {
                         notification("", response.error, true)
                     }
                     else {
@@ -29,6 +32,32 @@ function initGame() {
     };
 }
 
+function restartGame() {
+    gameid = generateRandomString();
+    $.ajax({
+        url: "/game",
+        type: 'post',
+        data: {
+            'initGame': gameid,
+            'hints': document.hints,
+        },
+        success: function (response) {
+            if (response != null) {
+                if (response.error != null) {
+                    notification("", response.error, true)
+                }
+                else {
+                    $(document.body).html(response);
+                    startGame();
+                }
+            }
+            else {
+                notification("Request Failed", "Try again later", true)
+            }
+        }
+    });
+}
+
 function startGame() {
     let quessPokemonButton = document.getElementById("quessPokemon");
     let quessPokemonInput = document.getElementById("quessPokemonInput");
@@ -40,9 +69,7 @@ function startGame() {
         if (code === 13) {
             guessPokemon();
         }
-        else {
-            filterFunction(this);
-        }
+        filterFunction(this);
     });
     $("#quessPokemonInput").focus(function () {
         hideorshow(this, "focus");
@@ -56,6 +83,10 @@ function startGame() {
         document.getElementById("quessPokemonInput").value = $(this).text();
     });
 
+    $(".restartGame").click(function (event) {
+        restartGame();
+    });
+
     setTimeout(() => {
         $('#loading').fadeOut(500)
             .promise().done(function () {
@@ -66,7 +97,7 @@ function startGame() {
     function guessPokemon() {
         let format = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
         let pokemonQuess = quessPokemonInput.value;
-        if(pokemonQuess != null && !format.test(pokemonQuess)) {
+        if (pokemonQuess != null && !format.test(pokemonQuess)) {
             $.ajax({
                 url: "/game",
                 type: 'post',
@@ -76,19 +107,19 @@ function startGame() {
                 },
                 success: function (response) {
                     if (response != null) {
-                        if(response.error != null) {
+                        if (response.error != null) {
                             notification("", response.error, true)
                         }
                         else {
-                            let tr = document.createElement("tr");        
-                            for (let i = 0; i < response.length; i++) {
+                            let tr = document.createElement("tr");
+                            for (let i = 0; i < response.length - 1; i++) {
                                 let td = document.createElement("td");
-                                if(i == 0) {
+                                if (i == 0) {
                                     td.innerHTML = `<img src="${response[i].sprite}">`;
                                 }
                                 else {
                                     td.innerText = capitalizeFirstLetter(response[i][Object.keys(response[i])[0]]);
-                                    if(response[i][Object.keys(response[i])[1]]) {
+                                    if (response[i][Object.keys(response[i])[1]]) {
                                         td.classList.add("correct");
                                     }
                                     else {
@@ -99,8 +130,8 @@ function startGame() {
                             }
                             $('#guessedPokemon>tbody').append(tr);
 
-                            if(response[1].value) {
-                                console.log("WIN");
+                            if (response[1].value) {
+                                wonGame(response);
                             }
                         }
                     }
@@ -131,20 +162,41 @@ function startGame() {
                 a[i].style.display = "none";
             }
         }
-    } 
+    }
 
     function hideorshow(element, string) {
         if (string == "focus") {
             setTimeout(function () {
-                document.getElementById("pokemonDropdown").classList.add("show");
+                $("#pokemonDropdown").addClass("show");
             }, 100);
         }
         else if (string == "focusout") {
             setTimeout(function () {
-                document.getElementById("pokemonDropdown").classList.remove("show");
+                $("#pokemonDropdown").removeClass("show");
             }, 100);
         }
     }
+
+    function wonGame(response) {
+        let pokemonName = capitalizeFirstLetter(response[1][Object.keys(response[1])[0]]);
+        let sprite = response[0].sprite;
+        let guesses = response[8].guesses;
+        $("#quessPokemonInput").prop('disabled', true);
+        $("#quessPokemon").prop('disabled', true);
+        $("#pokemonDropdown").remove();
+        $("#pokemonImage").attr("src", sprite);
+        $("#pokemonName").text(`It was ${pokemonName}`);
+        $("#guessesText").text(`You found the correct answer in ${guesses} ${guesses == 1 ? "guess" : "guesses" }!`);
+        openWinPopup();
+    }
+}
+
+function openWinPopup() {
+    $("#winOverlay").css("display", "flex");
+}
+
+function closeWinPopup() {
+    $("#winOverlay").css("display", "none");
 }
 
 function capitalizeFirstLetter(val) {

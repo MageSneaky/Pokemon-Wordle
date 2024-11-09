@@ -54,10 +54,10 @@ if (isset($_POST['initGame'])) {
 
     $quessed_pokemon = [];
 
-    if ($stmt = $mysqli->prepare('SELECT pokemon FROM games WHERE gameid = ?')) {
+    if ($stmt = $mysqli->prepare('SELECT pokemon, guesses FROM games WHERE gameid = ?')) {
         $stmt->bind_param('s', $gameid);
         $stmt->execute();
-        $stmt->bind_result($random_pokemon);
+        $stmt->bind_result($random_pokemon, $guesses);
         $stmt->fetch();
         $stmt->close();
     } else {
@@ -101,19 +101,31 @@ if (isset($_POST['initGame'])) {
     $quessed_pokemon->types = json_decode($quessed_pokemon->types);
     $random_pokemon->types = json_decode($random_pokemon->types);
 
+    $guesses++;
+
     $difference = [
-        array("sprite" => $quessed_pokemon->sprite),
-        array("name" => $quessed_pokemon->name, "value" => $quessed_pokemon->name == $random_pokemon->name),
-        array("generation" => $quessed_pokemon->generation, "value" => $quessed_pokemon->generation == $random_pokemon->generation),
-        array("type1" => $quessed_pokemon->types[0] ?? "undefined", "value" => ($quessed_pokemon->types[0] ?? "undefined") == ($random_pokemon->types[0] ?? "undefined")),
-        array("type2" => $quessed_pokemon->types[1] ?? "undefined", "value" => ($quessed_pokemon->types[1] ?? "undefined") == ($random_pokemon->types[1] ?? "undefined")),
-        array("color" => $quessed_pokemon->color, "value" => $quessed_pokemon->color == $random_pokemon->color),
-        array("habitat" => $quessed_pokemon->habitat, "value" => $quessed_pokemon->habitat == $random_pokemon->habitat),
-        array("shape" => $quessed_pokemon->shape, "value" => $quessed_pokemon->shape == $random_pokemon->shape),
+        ["sprite" => $quessed_pokemon->sprite],
+        ["name" => $quessed_pokemon->name, "value" => $quessed_pokemon->name == $random_pokemon->name],
+        ["generation" => $quessed_pokemon->generation, "value" => $quessed_pokemon->generation == $random_pokemon->generation],
+        ["type1" => $quessed_pokemon->types[0] ?? "undefined", "value" => ($quessed_pokemon->types[0] ?? "undefined") == ($random_pokemon->types[0] ?? "undefined")],
+        ["type2" => $quessed_pokemon->types[1] ?? "undefined", "value" => ($quessed_pokemon->types[1] ?? "undefined") == ($random_pokemon->types[1] ?? "undefined")],
+        ["color" => $quessed_pokemon->color, "value" => $quessed_pokemon->color == $random_pokemon->color],
+        ["habitat" => $quessed_pokemon->habitat, "value" => $quessed_pokemon->habitat == $random_pokemon->habitat],
+        ["shape" => $quessed_pokemon->shape, "value" => $quessed_pokemon->shape == $random_pokemon->shape],
+        ["guesses" => $guesses],
     ];
 
     echo json_encode($difference);
     exit;
+}
+
+function Hints()
+{
+    if (isset($_POST['hints'])) {
+        if ($_POST['hints'] == 1) {
+            echo '<a id="hint">Get a hint</a>';
+        }
+    }
 }
 
 function ReturnJson($t, $s, $stmt = null)
@@ -143,7 +155,8 @@ function GetPokemons()
     <div class="game">
         <nav>
             <a href="https://pokemon.sneaky.pink">Go back</a>
-            <a id="restartGame">Restart Game</a>
+            <?php Hints(); ?>
+            <a class="restartGame" title="Restart game with same settings?">Restart Game</a>
         </nav>
         <h1>Guess the Pokemon</h1>
         <div>
@@ -171,6 +184,19 @@ function GetPokemons()
 
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="win-overlay" id="winOverlay">
+        <div class="popup-box">
+            <button class="close-btn" onclick="closeWinPopup()">✖</button>
+            <h1>Congrats!</h1>
+            <img id="pokemonImage" src="" alt="">
+            <h3 id="pokemonName"></h3>
+            <p id="guessesText"></p>
+            <nav>
+                <a class="restartGame" title="Restart game with same settings?">Play Again</a>
+                <a href="/leaderboard">Leaderboard</a>
+            </nav>
         </div>
     </div>
 </div>
