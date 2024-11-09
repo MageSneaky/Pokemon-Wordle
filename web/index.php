@@ -35,7 +35,22 @@ $url = "https://pokemon.sneaky.pink";
 </head>
 
 <body onload="init()">
-    
+    <div class="container">
+        <div class="settings">
+            <h1 class="title">Pokemon Game</h1>
+            <form id="pokemonGame">
+                <div class="checkBox">
+                    <label for="hintsCheckBox" title="Allow hints? (score to submitted to leaderboard)">Allow hints?</label>
+                    <div class="checkbox">
+                        <input type="checkbox" id="hintsCheckBox" name="hintsCheckBox" value="0"
+                            title="Allow hints? (score to submitted to leaderboard)">
+                    </div>
+                </div>
+                <input type="submit" id="startButton" value="Start Game" name="startGame">
+                <span>Made by <a href="https://sneaky.pink" target="_blank">MageSneaky</a></span>
+            </form>
+        </div>
+    </div>
     <?php include 'loading.php'; ?>
 </body>
 

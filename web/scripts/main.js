@@ -14,5 +14,28 @@ function generateRandomString(length = 5) {
 }
 
 function init() {
-    
+    const startGameForm = document.querySelector("#pokemonGame");
+    $('input[type="checkbox"]').change(function () {
+        this.value = (Number(this.checked));
+    });
+    startGameForm.onsubmit = (event) => {
+        event.preventDefault();
+        var formData = new FormData(startGameForm);
+        $.ajax({
+            url: "/game",
+            type: 'post',
+            data: {
+                'startGame': formData.get('startGame'),
+                'hints': formData.get('hintsCheckBox'),
+            },
+            success: function (response) {
+                if (response != null) {
+                    document.body.innerHTML = response;
+                }
+                else {
+                    notification("", response.error, true)
+                }
+            }
+        });
+    };
 }
