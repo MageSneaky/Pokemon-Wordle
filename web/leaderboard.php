@@ -16,7 +16,7 @@ function getLeaderboard()
 {
     global $mysqli, $page_first_result, $results_per_page;
 
-    if ($stmt = $mysqli->prepare('SELECT * FROM games WHERE finished = 1 AND user_id IS NOT NULL ORDER BY guessesCount DESC LIMIT ?, ?')) {
+    if ($stmt = $mysqli->prepare('SELECT * FROM games WHERE finished = 1 AND hints = 0 AND user_id IS NOT NULL ORDER BY guessesCount ASC LIMIT ?, ?')) {
         $stmt->bind_param('ii', $page_first_result, $results_per_page);
         $stmt->execute();
         $result = $stmt->get_result();

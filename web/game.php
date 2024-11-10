@@ -15,7 +15,40 @@ if (isset($_POST['initGame'])) {
         ReturnJson("error", 'Failed to connect to MySQL: ' . mysqli_connect_error(), $mysqli);
     }
 
-    if ($stmt = $mysqli->prepare('SELECT * FROM pokemons ORDER BY pokedex ASC')) {
+    $generations = [
+        "I",
+        "II",
+        "III",
+        "IV",
+        "V",
+        "VI",
+        "VII",
+        "VIII",
+        "IX"
+    ];
+
+    if (isset($_POST['generations'])) {
+        foreach ($_POST['generations'] as $i => $generation) {
+            foreach ($generation as $key => $value) {
+                if (!filter_var($value, FILTER_VALIDATE_BOOLEAN)) {
+                    unset($generations[$i]);
+                }
+            }
+        }
+    }
+
+    $generations = array_values($generations);
+
+    $generations_formatted = "";
+    foreach ($generations as $key => $value) {
+        if ($key == 0) {
+            $generations_formatted = $generations_formatted . "'" . $value . "'";
+        } else {
+            $generations_formatted = $generations_formatted . ", '" . $value . "'";
+        }
+    }
+
+    if ($stmt = $mysqli->prepare('SELECT * FROM pokemons WHERE generation IN (' . $generations_formatted . ') ORDER BY pokedex ASC')) {
         $stmt->execute();
         $p = $stmt->get_result();
         $stmt->close();
@@ -37,10 +70,22 @@ if (isset($_POST['initGame'])) {
     }
     $random_pokemon = $pokemons[array_rand($pokemons)];
 
-    if ($stmt = $mysqli->prepare('INSERT INTO games (gameid, user_id, pokemon) VALUES (?, ?, ?)')) {
+    if (isset($_POST['hints'])) {
+        if ($_POST['hints'] == 1) {
+            $hints = 1;
+        } else {
+            $hints = 0;
+        }
+    }
+
+    if ($stmt = $mysqli->prepare('INSERT INTO games (gameid, user_id, pokemon, hints, ranked) VALUES (?, ?, ?, ?, ?)')) {
         $gameid = $_POST['initGame'];
         $userid = $_SESSION['user_id'] ?? null;
-        $stmt->bind_param('sss', $gameid, $userid, $random_pokemon);
+        $ranked = 0;
+        if (Count($generations) == 9 && $hints == 1) {
+            $ranked = 1;
+        }
+        $stmt->bind_param('sssss', $gameid, $userid, $random_pokemon, $hints, $ranked);
         $stmt->execute();
         $stmt->close();
     } else {
@@ -124,8 +169,7 @@ if (isset($_POST['initGame'])) {
 
     echo json_encode($difference);
     exit;
-}
-else if(isset($_POST['gameWon'])) {
+} else if (isset($_POST['gameWon'])) {
     $mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass, $mysql_db);
 
     if (mysqli_connect_errno()) {

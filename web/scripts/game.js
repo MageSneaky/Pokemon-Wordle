@@ -4,14 +4,24 @@ function initGame() {
     const startGameForm = document.querySelector("#pokemonGame");
     startGameForm.onsubmit = (event) => {
         event.preventDefault();
+        $('#startButton').prop('disabled', true);
         let formData = new FormData(startGameForm);
         let hints = formData.get('hints');
-        document.cookie = `hints=${hints || 0}`;
+        let generations = [];
+        for (let i = 1; i < 10; i++) {
+            let genName = 'gen' + i;
+            let gen = formData.get(genName) || false;
+            document.cookie = `${'gen' + i}=${gen};SameSite=none;Secure`;
+            let genObject = { [genName]: gen };
+            generations.push(genObject);
+        }
+        document.cookie = `hints=${hints || false};SameSite=none;Secure`;
         $.ajax({
             url: "/game",
             type: 'post',
             data: {
                 'initGame': gameid,
+                'generations': generations,
                 'hints': hints,
             },
             success: function (response) {
@@ -34,12 +44,21 @@ function initGame() {
 
 function restartGame() {
     gameid = generateRandomString();
+    let generations = [];
+    for (let i = 1; i < 10; i++) {
+        let genName = 'gen' + i;
+        let gen = getCookie(genName);
+        let genObject = { [genName]: gen };
+        generations.push(genObject);
+    }
+
     $.ajax({
         url: "/game",
         type: 'post',
         data: {
             'initGame': gameid,
-            'hints': document.hints,
+            'generations': generations,
+            'hints': getCookie("hints"),
         },
         success: function (response) {
             if (response != null) {
@@ -92,12 +111,11 @@ function startGame() {
             .promise().done(function () {
                 document.getElementById("loading").remove();
             });
-    }, 1500);
+    }, 2000);
 
     function guessPokemon() {
-        let format = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
         let pokemonQuess = quessPokemonInput.value;
-        if (pokemonQuess != null && !format.test(pokemonQuess)) {
+        if (pokemonQuess.length > 0 && !hasSpecialCharacters(pokemonQuess)) {
             $.ajax({
                 url: "/game",
                 type: 'post',
@@ -126,9 +144,9 @@ function startGame() {
                                         td.classList.add("incorrect");
                                     }
                                 }
-                                $(tr).prepend(td);
+                                $(tr).append(td);
                             }
-                            $('#guessedPokemon>tbody').append(tr);
+                            $('#guessedPokemon>tbody').prepend(tr);
 
                             if (response[1].value) {
                                 wonGame(response);
@@ -220,6 +238,24 @@ function closeWinPopup() {
 
 function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const cookiesArray = document.cookie.split(';');
+
+    for (let cookie of cookiesArray) {
+        cookie = cookie.trim();
+        if (cookie.indexOf(nameEQ) === 0) {
+            return cookie.substring(nameEQ.length);
+        }
+    }
+    return null;
+}
+
+function hasSpecialCharacters(str) {
+    const regex = /[^a-zA-Z0-9-]/;
+    return regex.test(str);
 }
 
 function generateRandomString(length = 10) {

@@ -34,7 +34,7 @@ function GetPokemons(downloadSprites = true) {
                         if (p.is_default == true) {
                             pokemon.pokedex = p.id;
                             pokemon.name = p.name;
-                            pokemon.name = pokemon.name.replace(/\-.*/, '')
+                            pokemon.name = pokemon.name.replace(/\-*/, '')
                             if (downloadSprites) {
                                 if (!fs.existsSync("./sprites")) {
                                     fs.mkdirSync("./sprites");

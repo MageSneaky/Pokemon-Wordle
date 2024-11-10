@@ -147,6 +147,7 @@ body {
     margin: 0;
     padding: 0;
     scrollbar-color: #454a4d #202324;
+    color: #ffffff;
 }
 
 header {
@@ -286,6 +287,60 @@ header nav:first-child>div>a:hover {
     align-items: center;
 }
 
+.container .settings .generations {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.container .settings .generations > p {
+    margin: 0;
+}
+
+.container .settings .generations>div {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+.container .settings .generations>div .generation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container .settings .generations>div .generation input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.container .settings .generations>div .generation .generation-checkbox {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    position: relative;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #cc0000;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease 0s;
+}
+
+.container .settings .generations>div .generation .checked {
+    background-color: #4ca55b;
+}
+
+.container .settings .generations>div>.generation .generation-checkbox>label {
+    position: absolute;
+    font-size: 18px;
+    color: white;
+}
+
 .container .game {
     display: flex;
     flex-direction: column;
@@ -388,6 +443,10 @@ header nav:first-child>div>a:hover {
     background-color: #19191a;
 }
 
+.container .game .dropdown-content div:hover > a {
+    color: #48c2b2;
+}
+
 .container .game .dropdown-content div img {
     height: 56px;
 }
@@ -457,7 +516,7 @@ header nav:first-child>div>a:hover {
 }
 
 .container .leaderboard table td {
-    width: 160px;
+    width: 180px;
     height: 50px;
     padding: 0;
     border-radius: 4px;
@@ -467,11 +526,26 @@ header nav:first-child>div>a:hover {
     width: 40px;
 }
 
+.container .leaderboard table td:nth-child(4) {
+    width: 70px;
+}
+
 .container .leaderboard table td a,
 .container .leaderboard table td span {
     display: flex;
     align-items: center;
     justify-content: center;
+
+}
+
+.container .leaderboard table td a:has(img),
+.container .leaderboard table td span:has(img) {
+    justify-content: left;
+    font-size: 14px;
+}
+
+.container .leaderboard table td:nth-child(5) span {
+    font-size: 14px;
 }
 
 .container .leaderboard table td img {
@@ -495,11 +569,12 @@ header nav:first-child>div>a:hover {
 .win-overlay .popup-box {
     max-width: 400px;
     width: 80%;
+    display: flex;
+    flex-direction: column;
     background: #1a1a1a;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    text-align: center;
 }
 
 .win-overlay .popup-box img {
@@ -517,9 +592,6 @@ header nav:first-child>div>a:hover {
 }
 
 .win-overlay .popup-box .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
     background: none;
     border: none;
     font-size: 18px;
