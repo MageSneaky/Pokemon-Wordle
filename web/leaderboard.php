@@ -25,10 +25,21 @@ function getLeaderboard()
         while ($row = $result->fetch_assoc()) {
             if (isset($row['user_id'])) {
                 $user_id = $row['user_id'];
-                $username = $row['username'];
+                if ($stmt = $mysqli->prepare('SELECT username, user_avatar FROM users WHERE user_id = ?')) {
+                    $stmt->bind_param('s', $user_id);
+                    $stmt->execute();
+                    $stmt->bind_result($username, $user_avatar);
+                    $stmt->fetch();
+                    $stmt->close();
+                }
+                $pokemon = json_decode($row['pokemon']);
+                $pokemonName = $pokemon->name;
+                $pokemonImage = $pokemon->sprite;
+                $date = new DateTime($row['startDate']);
+                $date = $date->format('Y-m-d H:i:s');
                 echo '
                 <tr>
-                    <td><span>' . $i . '</span></td><td><a href="/user/' . $user_id . '"><img src="">' . $username . '</a></td><td><span>' . $row['filename'] . '</span></td><td><span>' . $row['guessesCount'] . '</span></td>
+                    <td><span>' . $i . '</span></td><td><a href="/user/' . $user_id . '"><img src="' . $user_avatar . '">' . $username . '</a></td><td><span><img src="' . $pokemonImage . '">' . ucfirst($pokemonName) . '</span></td><td><span>' . $row['guessesCount'] . '</span></td><td><span>' . $date . '</span></td>
                 </tr>';
                 $i++;
             }
@@ -39,10 +50,13 @@ function getLeaderboard()
 function getGamesCount() {
     global $mysqli;
 
-    $get_games = $mysqli->query("SELECT * FROM games WHERE finished = 1");
-    $num = mysqli_num_rows($get_games);
+    $getGamesStarted = $mysqli->query("SELECT * FROM games");
+    $started = mysqli_num_rows($getGamesStarted);
 
-    echo $num;
+    $getGamesFinished = $mysqli->query("SELECT * FROM games WHERE finished = 1");
+    $finished = mysqli_num_rows($getGamesFinished);
+
+    echo "Games started $started Games finished $finished";
 }
 
 $title = "Leaderboard | PokemonGame";
@@ -83,7 +97,7 @@ $url = "https://pokemon.sneaky.pink";
         <img class="background" src="">
         <div class="leaderboard-container">
             <div class="leaderboard">
-                <span>Total games played <?php getGamesCount(); ?></span>
+                <span><?php getGamesCount(); ?></span>
                 <table>
                     <thead>
                         <tr>
