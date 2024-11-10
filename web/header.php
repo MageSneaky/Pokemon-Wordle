@@ -8,13 +8,12 @@ function loggedinheader()
     if (isset($_SESSION['user_avatar'])) {
         echo
             '<div class="dropdown">
-                <button class="dropbtn"><img class="avatar" src="' . $_SESSION['user_avatar'] . '"></button>
+                <button class="dropbtn"><img class="avatar" src="' . $_SESSION['user_avatar'] . '"/></button>
                 <div class="dropdown-content">
                     <a href="/logout">logout</a>
                 </div>
             </div>';
     } else {
-        echo '<a href="/leaderboard"><img src="/images/leaderboard.svg"></a>';
         echo '<a href="/login">login</a>';
     }
 }

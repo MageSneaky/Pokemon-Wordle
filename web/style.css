@@ -394,6 +394,41 @@ header nav:first-child>div>a:hover {
     display: block !important;
 }
 
+.container .login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    border: #414141 solid 1px;
+    border-radius: 10px;
+}
+
+.container .login .discord-login {
+    display: flex;
+    align-items: center;
+    background-color: #292929;
+    font-size: 20px;
+    border: 0;
+    padding: 8px 15px;
+    border-radius: 10px;
+    transition: all 0.2s ease 0s;
+    text-decoration: none;
+}
+
+.container .login .discord-login:hover {
+    background-color: #363636;
+}
+
+.container .login .discord-login img {
+    height: 35px;
+    margin-right: 5px;
+}
+
+.container .login p {
+    color: #979797;
+    margin-bottom: 0;
+}
+
 .win-overlay {
     width: 100%;
     height: 100%;

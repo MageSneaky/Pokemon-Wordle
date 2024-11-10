@@ -3,9 +3,7 @@ if (session_status() != 2) {
     session_start();
 }
 
-$client_id = $_ENV["client_id"];
-$secret_id = $_ENV["secret_id"];
-$redirect_url = $_ENV["redirect_url"];
+require __DIR__ . "/config.php";
 
 $base_url = "https://discord.com";
 
@@ -46,7 +44,13 @@ function init($redirect_url, $client_id, $client_secret, $bot_token = null)
     $response = curl_exec($curl);
     curl_close($curl);
     $results = json_decode($response, true);
-    $_SESSION['access_token'] = $results['access_token'];
+    if(isset($results['access_token'])){
+        $_SESSION['access_token'] = $results['access_token'];
+    }
+    else {
+        header('Location: https://pokemon.sneaky.pink/login?error=Discord OAuth Failed');
+        exit;
+    }
 }
 
 function get_user()
@@ -61,6 +65,21 @@ function get_user()
     curl_close($curl);
     $results = json_decode($response, true);
     $_SESSION['username'] = $results['username'];
+    $_SESSION['global_name'] = $results['global_name'];
     $_SESSION['user_id'] = $results['id'];
     $_SESSION['user_avatar'] = $results['avatar'];
+    $_SESSION['user_avatar'] = "https://cdn.discordapp.com/avatars/" . $_SESSION['user_id'] . "/" . $_SESSION['user_avatar'] . is_animated($_SESSION['user_avatar']);
+}
+
+function is_animated($avatar)
+{
+	$ext = substr($avatar, 0, 2);
+	if ($ext == "a_")
+	{
+		return ".gif";
+	}
+	else
+	{
+		return ".png";
+	}
 }

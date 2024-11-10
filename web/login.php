@@ -1,21 +1,46 @@
 <?php
+require __DIR__ . "/discord.php";
 if (isset($_GET['code'])) {
-    require __DIR__ . "/discord.php";
-
     init($redirect_url, $client_id, $secret_id, $bot_token);
 
     get_user();
 
+    $mysqli = new mysqli("127.0.0.1", "user", "pass", "pokemonGame");
+
+    if (mysqli_connect_errno()) {
+        header('Location: https://pokemon.sneaky.pink/logout');
+        exit;
+    }
+
+    if ($stmt = $mysqli->prepare('INSERT INTO users (user_id, username, user_avatar) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE username = ?, user_avatar = ?')) {
+        $user_id = $_SESSION['user_id'];
+        $username = $_SESSION['global_name'];
+        $user_avatar = $_SESSION['user_avatar'];
+        $stmt->bind_param('sssss', $user_id, $username, $user_avatar, $username, $user_avatar);
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        header('Location: https://pokemon.sneaky.pink/logout');
+        exit;
+    }
+
+    mysqli_close($mysqli);
+
     if (isset($_GET['goto'])) {
         header('Location: ' . $_GET['goto']);
+        exit;
     } else {
         header('Location: https://pokemon.sneaky.pink');
+        exit;
     }
 }
 
-if(isset($_SESSION['user_id'])) {
+if (isset($_SESSION['user_id'])) {
     header('Location: https://pokemon.sneaky.pink');
+    exit;
 }
+
+$auth_url = url($client_id, $redirect_url, $scopes);
 ?>
 <!DOCTYPE html>
 
@@ -56,7 +81,9 @@ $url = "https://pokemon.sneaky.pink";
     <?php include 'header.php'; ?>
     <div class="container">
         <div class="login">
-
+            <a class="discord-login" href="<?php echo $auth_url; ?>"><img src="/images/discord.svg">Login with
+                Discord</a>
+            <p>Allows for leaderboard submissions</p>
         </div>
     </div>
     <?php include 'notifications.php'; ?>

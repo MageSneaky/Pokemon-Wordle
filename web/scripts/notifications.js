@@ -1,3 +1,11 @@
+$(document).ready(function () {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if (urlParams.has("error")) {
+        notification("", urlParams.get("error"), true)
+    }
+});
+
 function notification(name, desc, error = false) {
     var item = document.createElement("div");
     item.onclick = () => {
@@ -5,9 +13,9 @@ function notification(name, desc, error = false) {
             $(this).remove();
         });
     };
-    item.classList.add('item');
-    if(error) {
-        item.classList.add('error');
+    item.classList.add("item");
+    if (error) {
+        item.classList.add("error");
     }
     var title = document.createElement("h3");
     var description = document.createElement("p");

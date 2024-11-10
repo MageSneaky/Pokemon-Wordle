@@ -131,3 +131,6 @@ dist
 
 # Pokemon Sprites
 /backend/sprites
+
+# Config File
+/web/config.php
