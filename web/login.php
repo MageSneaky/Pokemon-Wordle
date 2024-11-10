@@ -5,7 +5,7 @@ if (isset($_GET['code'])) {
 
     get_user();
 
-    $mysqli = new mysqli("127.0.0.1", "user", "pass", "pokemonGame");
+    $mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass, $mysql_db);
 
     if (mysqli_connect_errno()) {
         header('Location: https://pokemon.sneaky.pink/logout');
@@ -45,7 +45,7 @@ $auth_url = url($client_id, $redirect_url, $scopes);
 <!DOCTYPE html>
 
 <?php
-$title = "PokemonGame";
+$title = "Login | PokemonGame";
 $description = "";
 $logo = "/images/logo.png";
 $url = "https://pokemon.sneaky.pink";

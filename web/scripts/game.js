@@ -6,7 +6,7 @@ function initGame() {
         event.preventDefault();
         let formData = new FormData(startGameForm);
         let hints = formData.get('hints');
-        document.cookie = `hints=${hints || 0}`; 
+        document.cookie = `hints=${hints || 0}`;
         $.ajax({
             url: "/game",
             type: 'post',
@@ -126,7 +126,7 @@ function startGame() {
                                         td.classList.add("incorrect");
                                     }
                                 }
-                                $(tr).append(td);
+                                $(tr).prepend(td);
                             }
                             $('#guessedPokemon>tbody').append(tr);
 
@@ -178,16 +178,35 @@ function startGame() {
     }
 
     function wonGame(response) {
-        let pokemonName = capitalizeFirstLetter(response[1][Object.keys(response[1])[0]]);
-        let sprite = response[0].sprite;
-        let guesses = response[8].guesses;
-        $("#quessPokemonInput").prop('disabled', true);
-        $("#quessPokemon").prop('disabled', true);
-        $("#pokemonDropdown").remove();
-        $("#pokemonImage").attr("src", sprite);
-        $("#pokemonName").text(`It was ${pokemonName}`);
-        $("#guessesText").text(`You found the correct answer in ${guesses} ${guesses == 1 ? "guess" : "guesses" }!`);
-        openWinPopup();
+        $.ajax({
+            url: "/game",
+            type: 'post',
+            data: {
+                'gameWon': gameid
+            },
+            success: function (r) {
+                if (response != null) {
+                    if (response.error != null) {
+                        notification("", response.error, true)
+                    }
+                    else {
+                        let pokemonName = capitalizeFirstLetter(response[1][Object.keys(response[1])[0]]);
+                        let sprite = response[0].sprite;
+                        let guesses = response[8].guesses;
+                        $("#quessPokemonInput").prop('disabled', true);
+                        $("#quessPokemon").prop('disabled', true);
+                        $("#pokemonDropdown").remove();
+                        $("#pokemonImage").attr("src", sprite);
+                        $("#pokemonName").text(`It was ${pokemonName}`);
+                        $("#guessesText").text(`You found the correct answer in ${guesses} ${guesses == 1 ? "guess" : "guesses"}!`);
+                        openWinPopup();
+                    }
+                }
+                else {
+                    notification("Request Failed", "Try again later", true)
+                }
+            }
+        });
     }
 }
 

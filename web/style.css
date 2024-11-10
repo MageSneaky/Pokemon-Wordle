@@ -368,7 +368,8 @@ header nav:first-child>div>a:hover {
     min-width: 230px;
     max-height: 340px;
     overflow-y: scroll;
-    border: 1px solid #818181;
+    border: 1px solid #5f5f5f;
+    right: auto;
     z-index: 100;
     position: absolute;
 }

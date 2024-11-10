@@ -2,8 +2,14 @@
 $random_pokemon = "";
 $pokemons = [];
 
+if (session_status() != 2) {
+    session_start();
+}
+
+require __DIR__ . "/config.php";
+
 if (isset($_POST['initGame'])) {
-    $mysqli = new mysqli("127.0.0.1", "user", "pass", "pokemonGame");
+    $mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass, $mysql_db);
 
     if (mysqli_connect_errno()) {
         ReturnJson("error", 'Failed to connect to MySQL: ' . mysqli_connect_error(), $mysqli);
@@ -31,9 +37,10 @@ if (isset($_POST['initGame'])) {
     }
     $random_pokemon = $pokemons[array_rand($pokemons)];
 
-    if ($stmt = $mysqli->prepare('INSERT INTO games (gameid, pokemon) VALUES (?, ?)')) {
+    if ($stmt = $mysqli->prepare('INSERT INTO games (gameid, user_id, pokemon) VALUES (?, ?, ?)')) {
         $gameid = $_POST['initGame'];
-        $stmt->bind_param('ss', $gameid, $random_pokemon);
+        $userid = $_SESSION['user_id'] ?? null;
+        $stmt->bind_param('sss', $gameid, $userid, $random_pokemon);
         $stmt->execute();
         $stmt->close();
     } else {
@@ -43,7 +50,7 @@ if (isset($_POST['initGame'])) {
     mysqli_close($mysqli);
 } else if (isset($_POST['guessPokemon'], $_POST['gameid'])) {
     header('Content-Type: application/json');
-    $mysqli = new mysqli("127.0.0.1", "user", "pass", "pokemonGame");
+    $mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass, $mysql_db);
 
     if (mysqli_connect_errno()) {
         ReturnJson("error", 'Failed to connect to MySQL: ' . mysqli_connect_error(), $mysqli);
@@ -54,7 +61,7 @@ if (isset($_POST['initGame'])) {
 
     $quessed_pokemon = [];
 
-    if ($stmt = $mysqli->prepare('SELECT pokemon, guesses FROM games WHERE gameid = ?')) {
+    if ($stmt = $mysqli->prepare('SELECT pokemon, guessesCount FROM games WHERE gameid = ?')) {
         $stmt->bind_param('s', $gameid);
         $stmt->execute();
         $stmt->bind_result($random_pokemon, $guesses);
@@ -64,7 +71,7 @@ if (isset($_POST['initGame'])) {
         ReturnJson("error", "Could not prepare statement!", $stmt);
     }
 
-    if ($stmt = $mysqli->prepare('UPDATE games SET guesses = guesses + 1 WHERE gameid = ?')) {
+    if ($stmt = $mysqli->prepare('UPDATE games SET guessesCount = guessesCount + 1 WHERE gameid = ?')) {
         $stmt->bind_param('s', $gameid);
         $stmt->execute();
         $stmt->close();
@@ -117,6 +124,22 @@ if (isset($_POST['initGame'])) {
 
     echo json_encode($difference);
     exit;
+}
+else if(isset($_POST['gameWon'])) {
+    $mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass, $mysql_db);
+
+    if (mysqli_connect_errno()) {
+        ReturnJson("error", 'Failed to connect to MySQL: ' . mysqli_connect_error(), $mysqli);
+    }
+    $gameid = $_POST['gameWon'];
+    if ($stmt = $mysqli->prepare('UPDATE games SET finished = 1 WHERE gameid = ?')) {
+        $stmt->bind_param('s', $gameid);
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        ReturnJson("error", "Could not prepare statement!", $stmt);
+    }
+    mysqli_close($mysqli);
 }
 
 function Hints()
