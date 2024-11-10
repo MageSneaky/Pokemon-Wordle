@@ -36,6 +36,7 @@ $url = "https://pokemon.sneaky.pink";
 </head>
 
 <body onload="init()">
+    <?php include 'header.php'; ?>
     <div class="container">
         <div class="settings">
             <h1 class="title">Pokemon Game</h1>
@@ -44,7 +45,8 @@ $url = "https://pokemon.sneaky.pink";
                     <label for="hintsCheckBox" title="Allow hints? (score to submitted to leaderboard)">Allow
                         hints?</label>
                     <div class="check-Box">
-                        <input type="checkbox" id="hintsCheckBox" <?php echo $_COOKIE['hints'] == 1 ? 'checked=""' : '' ?> name="hints" value="0" title="Allow hints? (score to submitted to leaderboard)">
+                        <input type="checkbox" id="hintsCheckBox" <?php echo $_COOKIE['hints'] == 1 ? 'checked=""' : '' ?>
+                            name="hints" value="0" title="Allow hints? (score to submitted to leaderboard)">
                     </div>
                 </div>
                 <input type="submit" id="startButton" value="Start Game" name="startGame">
