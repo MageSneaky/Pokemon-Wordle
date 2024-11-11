@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 
 <?php
+if (session_status() != 2) {
+    session_start();
+}
+
 $hints = isset($_COOKIE["hints"]) ? (filter_var($_COOKIE["hints"], FILTER_VALIDATE_BOOLEAN) ? 'checked=""' : "") : "";
 
 function GetGenerations()
@@ -30,7 +34,14 @@ function GetGenerations()
     }
 }
 
-$title = "PokemonGame";
+if(isset($_SESSION['user_avatar'])) {
+    $user_avatar_js = $_SESSION['user_avatar'];
+}
+else {
+    $user_avatar_js = null;
+}
+
+$title = "Pokemon Wordle";
 $description = "";
 $logo = "/images/logo.png";
 $url = "https://pokemon.sneaky.pink";
@@ -61,7 +72,7 @@ $url = "https://pokemon.sneaky.pink";
     <script src="/scripts/jquery.min.js"></script>
     <script src="/scripts/notifications.js"></script>
     <script type="text/javascript">
-    let user_avatar='<?php echo (isset($_SESSION['user_avatar']))?$_SESSION['user_avatar']:null; ?>';
+    let user_avatar='<?php echo $user_avatar_js; ?>';
     </script>
     <script src="/scripts/main.js"></script>
     <script src="/scripts/game.js"></script>
@@ -71,8 +82,8 @@ $url = "https://pokemon.sneaky.pink";
     <?php include 'header.php'; ?>
     <div class="container">
         <div class="settings">
-            <h1 class="title">Pokemon Game</h1>
-            <form id="pokemonGame">
+            <h1 class="title">Pokemon Wordle</h1>
+            <form id="pokemonWordle">
                 <div class="check-Box">
                     <label for="hintsCheckBox" title="Allow hints? (score to submitted to leaderboard)">Allow
                         hints?</label>

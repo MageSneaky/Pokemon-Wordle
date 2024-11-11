@@ -1,7 +1,7 @@
 <?php
 //Discord OAuth
 $client_id = "";
-$secret_id = "";
+$client_secret = "";
 $redirect_url = "";
 $scopes = "identify";
 
@@ -9,4 +9,4 @@ $scopes = "identify";
 $mysql_host = "";
 $mysql_user = "";
 $mysql_pass = "";
-$mysql_db = "";
+$mysql_db = "pokemonwordle";

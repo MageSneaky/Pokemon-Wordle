@@ -1,7 +1,9 @@
 let gameid = "";
+let guessed = false;
+
 function initGame() {
     gameid = generateRandomString();
-    const startGameForm = document.querySelector("#pokemonGame");
+    const startGameForm = document.querySelector("#pokemonWordle");
     startGameForm.onsubmit = (event) => {
         event.preventDefault();
         $('#startButton').prop('disabled', true);
@@ -88,23 +90,30 @@ function startGame() {
         if (code === 13) {
             guessPokemon();
         }
-        filterFunction(this);
+        filterFunction();
     });
     $("#quessPokemonInput").focus(function () {
         hideorshow(this, "focus");
-        filterFunction(this);
+        filterFunction();
     });
     $("#quessPokemonInput").focusout(function () {
         hideorshow(this, "focusout");
     });
 
     $("#pokemonDropdown").find("div").click(function (event) {
-        document.getElementById("quessPokemonInput").value = $(this).text();
+        quessPokemonInput.value = $(this).text();
+    });
+
+    $("#pokemonDropdown").find("div").mousedown(function (event) {
+        quessPokemonInput.value = $(this).text();
     });
 
     $(".restartGame").click(function (event) {
         restartGame();
     });
+
+    //Get random pokemon to begin game with
+    guessPokemon($($('#pokemonDropdown>div')[Math.floor(Math.random()*$('#pokemonDropdown>div').length)]).text());
 
     setTimeout(() => {
         $('#loading').fadeOut(500)
@@ -113,9 +122,12 @@ function startGame() {
             });
     }, 2000);
 
-    function guessPokemon() {
-        let pokemonQuess = quessPokemonInput.value;
-        if (pokemonQuess.length > 0 && !hasSpecialCharacters(pokemonQuess)) {
+    function guessPokemon(pokemonQuess = "") {
+        if(pokemonQuess == "") {
+            pokemonQuess = quessPokemonInput.value;
+        }
+        if (pokemonQuess.length > 0 && !hasSpecialCharacters(pokemonQuess) && !guessed) {
+            guessed = true;
             $.ajax({
                 url: "/game",
                 type: 'post',
@@ -156,6 +168,7 @@ function startGame() {
                     else {
                         notification("Request Failed", "Try again later", true)
                     }
+                    guessed = false;
                 }
             });
         }
@@ -166,7 +179,7 @@ function startGame() {
         quessPokemonInput.value = "";
     }
 
-    function filterFunction(element) {
+    function filterFunction() {
         let input, filter, a, i;
         input = document.getElementById("quessPokemonInput");
         filter = input.value.toLowerCase();

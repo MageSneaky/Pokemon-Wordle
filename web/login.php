@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . "/discord.php";
 if (isset($_GET['code'])) {
-    init($redirect_url, $client_id, $secret_id, $bot_token);
+    init($redirect_url, $client_id, $client_secret, $bot_token);
 
     get_user();
 
@@ -45,7 +45,7 @@ $auth_url = url($client_id, $redirect_url, $scopes);
 <!DOCTYPE html>
 
 <?php
-$title = "Login | PokemonGame";
+$title = "Login | Pokemon Wordle";
 $description = "";
 $logo = "/images/logo.png";
 $url = "https://pokemon.sneaky.pink";

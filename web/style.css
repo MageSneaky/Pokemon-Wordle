@@ -289,7 +289,6 @@ header nav:first-child>div>a:hover {
 
 .container .settings .generations {
     text-align: center;
-    margin-bottom: 10px;
 }
 
 .container .settings .generations > p {
@@ -339,6 +338,10 @@ header nav:first-child>div>a:hover {
     position: absolute;
     font-size: 18px;
     color: white;
+}
+
+.container .settings #startButton {
+    margin: 10px 0;
 }
 
 .container .game {
@@ -449,6 +452,12 @@ header nav:first-child>div>a:hover {
 
 .container .game .dropdown-content div img {
     height: 56px;
+}
+
+.container .game .dropdown-content div > img,
+.container .game .dropdown-content div > a {
+    pointer-events: none;
+    user-select: none;
 }
 
 .show {
@@ -571,6 +580,7 @@ header nav:first-child>div>a:hover {
     width: 80%;
     display: flex;
     flex-direction: column;
+    align-items: center;
     background: #1a1a1a;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

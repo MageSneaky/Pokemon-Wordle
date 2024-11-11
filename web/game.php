@@ -82,7 +82,7 @@ if (isset($_POST['initGame'])) {
         $gameid = $_POST['initGame'];
         $userid = $_SESSION['user_id'] ?? null;
         $ranked = 0;
-        if (Count($generations) == 9 && $hints == 1) {
+        if (Count($generations) == 9 && $hints == 0 && $userid != null) {
             $ranked = 1;
         }
         $stmt->bind_param('sssss', $gameid, $userid, $random_pokemon, $hints, $ranked);

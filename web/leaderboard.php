@@ -59,7 +59,7 @@ function getGamesCount() {
     echo "Games started $started Games finished $finished";
 }
 
-$title = "Leaderboard | PokemonGame";
+$title = "Leaderboard | Pokemon Wordle";
 $description = "";
 $logo = "/images/logo.png";
 $url = "https://pokemon.sneaky.pink";
