@@ -13,6 +13,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#about">About</a></li>
+    <li><a href="#demo">Demo</a></li>
     <li><a href="#self-host">Self-Host</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
@@ -22,7 +23,10 @@
 </details>
 
 ## About
-Welcome to Pokémon Wordle, a web-based word-guessing game where players try to guess the name of a Pokémon. Inspired by the popular Wordle game, this version adds a fun Pokémon twist. Pokémon Wordle is built with HTML, CSS, JavaScript, jQuery, and PHP.
+Welcome to [Pokémon Wordle](https://pokemon.sneaky.pink), a web-based word-guessing game where players try to guess the name of a Pokémon. Inspired by the popular Wordle game, this version adds a fun Pokémon twist. Pokémon Wordle is built with HTML, CSS, JavaScript, jQuery, and PHP.
+
+### Demo
+[Live Demo](https://pokemon.sneaky.pink)
 
 ### Self-Host
 #### Prerequisites
@@ -38,22 +42,26 @@ git clone https://github.com/MageSneaky/pokemon-wordle.git
 ```
 
 2. Configuration
-- Rename ``config.sample.php`` to ``config.php``
+- Rename ``.env.example`` to ``.env``.
+- Rename ``config.sample.php`` to ``config.php``.
 
 3. Create Discord Application
 - Go to [Discord's Developer Portal](https://discord.com/developers/applications) to create a new Application (or use an existing one).
 - Copy client ID and client secret into ``config.php``.
 - Set up a redirect URI to ``http://locahost/login`` (or adjust based on your server setup).
 
-4. Set up local server:
+4. Database setup:
+- Import ``database.sql`` from the project folder into your MySQL database.
+- Update the database credentials in ``config.php`` and ``.env`` to match your database setup.
+
+5. Set up backend server:
+- Navigate to the ``backend`` folder and run ```node .``` to start the backend server and populate necessary database entries.
+
+6. Set up local server:
 - Place the ``web`` folder inside your server's root directory.
 - Start your server.
 
-5. Database setup:
-- Import ``database.sql`` from the project folder into your MySQL database.
-- Update the database credentials in ``config.php`` to match your database setup.
-
-6. Run the Game:
+7. Run the Game:
 - Access the game at ``http://localhost`` (or the corresponding URL based on your server setup).
 
 ### Roadmap
@@ -65,7 +73,13 @@ git clone https://github.com/MageSneaky/pokemon-wordle.git
 - [ ] "How to play" guide
 
 ### Contributing
-Contributions are welcome! If you'd like to help improve Pokémon Wordle, please fork the repository and create a pull request with your proposed changes. Or for simpler issues/suggestions create an issue [here](https://github.com/MageSneaky/pokemon-wordle/issues)
+Contributions are welcome! Please follow these steps:
+1. Fork the project.
+2. Create your feature branch: git checkout -b feature/new-feature.
+3. Commit your changes: git commit -m 'Add new feature'.
+4. Push to the branch: git push origin feature/new-feature.
+5. Open a pull request.
+For simpler issues or suggestions, create an issue [here](https://github.com/MageSneaky/pokemon-wordle/issues).
 
 ### Technologies Used
 - Frontend: HTML, CSS, JavaScript, jQuery
