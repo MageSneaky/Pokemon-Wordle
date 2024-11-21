@@ -39,7 +39,7 @@ function getLeaderboard()
                 $date = $date->format('Y-m-d H:i:s');
                 echo '
                 <tr>
-                    <td><span>' . $i . '</span></td><td><a href="/user/' . $user_id . '"><img src="' . $user_avatar . '">' . $username . '</a></td><td><span><img src="' . $pokemonImage . '">' . ucfirst($pokemonName) . '</span></td><td><span>' . $row['guessesCount'] . '</span></td><td><span>' . $date . '</span></td>
+                    <td><span>' . $i . '</span></td><td><a href="/user/' . $user_id . '"><img src="' . $user_avatar . '"><span>' . $username . '</span></a></td><td><span><img src="' . $pokemonImage . '"><span>' . ucfirst($pokemonName) . '</span></span></td><td><span>' . $row['guessesCount'] . '</span></td><td><span>' . $date . '</span></td>
                 </tr>';
                 $i++;
             }

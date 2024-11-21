@@ -31,6 +31,7 @@ button {
     font-family: "Montserrat";
     color: #ffffff;
     cursor: text;
+    transition: all 0.2s ease 0s;
 }
 
 label[for] {
@@ -204,6 +205,7 @@ header nav:first-child>div>a:hover {
 .mobilenav .dropbtn {
     opacity: 1;
     background-color: #333333;
+    padding: 8px 15px;
 }
 
 .mobilenav .dropbtn:hover {
@@ -247,6 +249,7 @@ header nav:first-child>div>a:hover {
     text-decoration: none;
     display: block;
     margin: 0;
+    font-size: 16px;
     transition: all 0.2s ease 0s;
 }
 
@@ -268,6 +271,7 @@ header nav:first-child>div>a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.5s ease 0s;
 }
 
 .container .title {
@@ -279,6 +283,7 @@ header nav:first-child>div>a:hover {
     border: #414141 solid 1px;
     border-radius: 10px;
     background-color: #1a1a1a;
+    text-align: center;
 }
 
 .container .settings form {
@@ -287,11 +292,7 @@ header nav:first-child>div>a:hover {
     align-items: center;
 }
 
-.container .settings .generations {
-    text-align: center;
-}
-
-.container .settings .generations > p {
+.container .settings .generations>p {
     margin: 0;
 }
 
@@ -319,7 +320,6 @@ header nav:first-child>div>a:hover {
     height: 35px;
     display: flex;
     position: relative;
-    font-size: 22px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -446,7 +446,7 @@ header nav:first-child>div>a:hover {
     background-color: #19191a;
 }
 
-.container .game .dropdown-content div:hover > a {
+.container .game .dropdown-content div:hover>a {
     color: #48c2b2;
 }
 
@@ -454,8 +454,8 @@ header nav:first-child>div>a:hover {
     height: 56px;
 }
 
-.container .game .dropdown-content div > img,
-.container .game .dropdown-content div > a {
+.container .game .dropdown-content div>img,
+.container .game .dropdown-content div>a {
     pointer-events: none;
     user-select: none;
 }
@@ -497,6 +497,7 @@ header nav:first-child>div>a:hover {
 .container .login p {
     color: #979797;
     margin-bottom: 0;
+    text-align: center;
 }
 
 .container .leaderboard {
@@ -687,5 +688,104 @@ header nav:first-child>div>a:hover {
 
     header>nav:first-child {
         display: none;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .container .leaderboard table td {
+        font-size: 15px;
+    }
+
+    .container .leaderboard table td a:has(img),
+    .container .leaderboard table td span:has(img) {
+        justify-content: center;
+    }
+
+    .container .leaderboard table td a:has(img)>span,
+    .container .leaderboard table td span:has(img)>span {
+        display: none;
+    }
+
+    .container .leaderboard table td img {
+        margin-right: 0;
+    }
+
+    .container .leaderboard table td:nth-child(2) {
+        width: 50px;
+    }
+
+    .container .leaderboard table td:nth-child(3) {
+        width: 70px;
+    }
+
+    .container .leaderboard table td:nth-child(5) {
+        width: 110px;
+    }
+}
+
+@media screen and (max-width: 350px) {
+
+    p,
+    a,
+    span,
+    label,
+    input,
+    li,
+    td,
+    button {
+        font-size: 13px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .container .login {
+        padding: 10px;
+    }
+
+    .container .login .discord-login img {
+        height: 25px;
+    }
+
+    .container .login .discord-login {
+        font-size: 14px;
+        padding: 4px 12px;
+    }
+
+    .check-Box>input[type="checkbox"] {
+        height: 19px;
+        width: 35px;
+    }
+
+    .check-Box>input[type="checkbox"]::after {
+        height: 15px;
+        top: 2px;
+        width: 15px;
+    }
+
+    .container .settings .generations>div .generation .generation-checkbox {
+        width: 30px;
+        height: 30px;
+    }
+
+    .container .settings .generations>div>.generation .generation-checkbox>label {
+        font-size: 14px;
+    }
+
+    .container .leaderboard table td img {
+        height: 35px;
+    }
+
+    .container .leaderboard table td:nth-child(2) {
+        width: 40px;
+    }
+
+    .container .leaderboard table td:nth-child(3) {
+        width: 55px;
+    }
+
+    .container .leaderboard table td:nth-child(5) span {
+        font-size: 12px;
     }
 }

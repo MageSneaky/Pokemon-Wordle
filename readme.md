@@ -71,6 +71,7 @@ git clone https://github.com/MageSneaky/pokemon-wordle.git
 - [ ] Replay system
 - [ ] User profile page
 - [ ] "How to play" guide
+- [ ] Weekly challenges/Events
 
 ### Contributing
 Contributions are welcome! Please follow these steps:
